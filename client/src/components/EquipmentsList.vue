@@ -2,7 +2,7 @@
     <transition-group name="eq-list">
         <div class="d-inline-flex align-items-center justify-content-center" v-if="eq.length > 0" v-for="item in eq">
             <div class='m-2'>
-                <a href="#" @click="$router.push('/catalogue/' + item.Models.Brand.Title + '/' + item.Models.Title + '/' + item.Title)" class="Car-link">
+                <a href="#" @click="$router.push('/catalogue/' + item.Models.Brand.Title + '/' + item.Models.Title + '/' + item.Title + '/' + item.id)" class="Car-link">
                     <div class="Car-Item">
                         <div class="Car-Image" v>
                             <img v-if="item.Image" class="img-fluid img-car" :src="require('../assets/'+item.Image)">       

@@ -1,3 +1,4 @@
+const { Sequelize } = require('sequelize');
 const db = require('../config/db.config')
 const Equipments = db.equipments;
 
@@ -25,14 +26,15 @@ exports.findAll = (req, res) => {
 }
 
 exports.findOne = (req, res) => {
-    res.Brand = $route.params.Brand
+    const Id = req.params.Id
     console.log(res.Brand)
     Equipments.findAll({
         where: {
-            CanOrder: 1
+            CanOrder: 1,
+            id: Id
         },
         include: [
-            {association: 'Models', include: [{association: "Brand"}]},
+            {association: 'Models' , include: [{association: "Brand"}] },
             {association: 'TechnicalInformation', include: [{association: 'EngineType'}, {association: 'Color'}, {association: 'BodyType'}, {association: 'Transmission'}, {association: 'DriveType'}]}
         ]
     }).then(equipment => {

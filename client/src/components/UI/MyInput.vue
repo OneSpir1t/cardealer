@@ -6,7 +6,7 @@
 export default {
     name: 'MyInput',
     props:{
-        modelValue: {String, Number}
+        modelValue: {String, Number, Array}
     },
     methods: {
         updateInput(event){
@@ -19,7 +19,7 @@ export default {
 
 <style >
     .input{
-        border-color: white;
+        border-color: green;
         border-radius: 8px;
         margin: 2px;      
     }

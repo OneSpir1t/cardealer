@@ -9,9 +9,12 @@ app.use(cors())
 
 const Equipments = require('./route/Equipments.route')
 const Brands = require('./route/Brands.route')
+const BodyTypes = require('./route/BodyTypes.route')
 
 app.use('/Equipments', Equipments)
 
 app.use('/Brands', Brands)
 
-app.listen(3000, () => console.log('server listening on port 3000'));
+app.use('/BodyTypes', BodyTypes)
+
+app.listen(3000, () => console.log('server running at: http://localhost:3000'));

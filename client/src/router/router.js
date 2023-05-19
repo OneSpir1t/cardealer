@@ -13,7 +13,7 @@ const routes = [
         component: Catalogue
     },
     {
-        path: '/catalogue/:Brand/:Model/:Name',
+        path: '/catalogue/:Brand/:Model/:Name/:Id',
         component: CatalogueCar
         
     }
