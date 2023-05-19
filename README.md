@@ -9,8 +9,8 @@ npm run start
 npm run serve
 ```
 ## Important! Run the execute command for each component:
-```code
-npm i
+```js
+npm i //npm install
 ```
 # Tech Stack
 
