@@ -1,5 +1,5 @@
 # cardealer-main
-## Get started
+# Get started
 ## _*To launch server go to path "backend" and to terminal enter this:*_
 ```code
 npm run start
