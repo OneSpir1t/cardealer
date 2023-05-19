@@ -10,7 +10,8 @@ npm run serve
 ```
 ## Important! Run the execute command for each component:
 ```js
-npm i //npm install
+//npm install
+npm i
 ```
 # Tech Stack
 
