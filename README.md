@@ -16,4 +16,4 @@ npm i
 
 **Client:** Vue 3
 
-**Server:** Node, Express, Sequelize
+**Server:** Express, Sequelize
