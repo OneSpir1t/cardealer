@@ -12,7 +12,7 @@ npm run serve
 ```code
 npm i
 ```
-## Tech Stack
+# Tech Stack
 
 **Client:** Vue 3
 
