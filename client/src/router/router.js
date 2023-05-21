@@ -1,6 +1,8 @@
 import Main from "@/pages/Main"
 import Catalogue from "@/pages/Catalogue"
-import CatalogueCar from "@/pages/CatalogueCar"
+import CatalogueCar from "@/pages/CatalogueCarView"
+import AvailableCars from "@/pages/AvailableCars"
+import AvailableCarView from "@/pages/AvailableCarView"
 import {createRouter, createWebHistory} from 'vue-router'
 
 const routes = [
@@ -13,8 +15,17 @@ const routes = [
         component: Catalogue
     },
     {
+        path: '/availablecars',
+        component: AvailableCars
+    },
+    {
         path: '/catalogue/:Brand/:Model/:Name/:Id',
         component: CatalogueCar
+        
+    },
+    {
+        path: '/availablecars/:Brand/:Model/:Name/:Id',
+        component: AvailableCarView
         
     }
 ]

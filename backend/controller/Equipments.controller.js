@@ -27,7 +27,6 @@ exports.findAll = (req, res) => {
 
 exports.findOne = (req, res) => {
     const Id = req.params.Id
-    console.log(res.Brand)
     Equipments.findAll({
         where: {
             CanOrder: 1,

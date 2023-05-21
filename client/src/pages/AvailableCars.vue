@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid" @click="hideDialog">
         <div class="d-flex">
-            <div class="p-2 left d-flex flex-column justify-content-start" v-if="!isLoading"> 
+            <div class="p-2 left d-flex flex-column justify-content-start"> 
                 <div class="form-group">
                     <label class="m-2">Поиск:</label>
                     <MyInput
@@ -89,11 +89,32 @@
                             {{ DriveType.Title }}
                         </label>
                     </div>
-                </div>                              
+                </div>
+                <div>
+                    <h2>Владельцев:</h2>
+                    <div class="d-flex flex-column">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" v-model="Owners" name="inlineRadioOptions" id="inlineRadio1" value="">
+                            <label class="form-check-label" for="inlineRadio1">Неважно</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" v-model="Owners" name="inlineRadioOptions" id="inlineRadio1" value="1">
+                            <label class="form-check-label" for="inlineRadio1">1</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" v-model="Owners" name="inlineRadioOptions" id="inlineRadio2" value="2">
+                            <label class="form-check-label" for="inlineRadio2">2</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" v-model="Owners" name="inlineRadioOptions" id="inlineRadio3" value="3">
+                            <label class="form-check-label" for="inlineRadio3">больше 3</label>
+                        </div>
+                    </div>
+                </div>
             </div>              
             <div class="flex-fill Cars-View text-center flex-column d-flex justify-content-center align-items-center">
                 <div>       
-                    <EquipmentList :eq="resultEq" v-if="!isLoading"/>
+                    <AvailableCarList :eq="resultEq" v-if="!isLoading"/>
                 </div>
                 <div class="spinner-border" role="status" v-if="isLoading">
                     <span class="sr-only"></span>
@@ -113,18 +134,24 @@
 </template>
 
 <script>
-import EquipmentList from '@/components/EquipmentsList.vue'
 import axios from 'axios'
-import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
+import AvailableCarList from '@/components/AvailableCarList.vue'
+import MyInput from '@/components/UI/MyInput.vue'
+
 export default {
     name: 'Catalogue',
     components: {
-    EquipmentList,
+        AvailableCarList,
+    MyInput
 },
+    props:[
+        'selectedSort'
+    ],
     data(){
         return {
             eq: [],           
             isLoading: false,
+            dialogVisible: false,
             selectedSort: '',
             selectedBrand: '',
             selectedModel: '',
@@ -141,6 +168,7 @@ export default {
             optionsEngineType:[],
             optionsTransmission:[],
             optionsDriveType: [],
+            Owners: '',
             MaxCost: 55000000,
             MinCost: 500000,
             page: 1,
@@ -154,25 +182,28 @@ export default {
         
     },  
     methods:{
+
+        showDialog(){
+            this.dialogVisible = true
+        },
         async fetchEq(){
             try{
-                this.isLoading = true
-                const response = await axios.get("http://localhost:3000/Equipments")
-                this.eq = response.data
-                this.isLoading = false
+                this.isLoading = true;
+                const response = await axios.get("http://localhost:3000/AvailableCars")
+                this.eq = response.data  
+                this.isLoading = false;
             }
             catch(e){
                 console.log(e)
             } finally { 
-
             }
         },
         async fetchBrands(){
             try{
-                this.isLoading = true
+                this.isLoading = true;
                 const response = await axios.get('http://localhost:3000/Brands')
-                this.optionsBrand = response.data
-                this.isLoading = false   
+                this.optionsBrand = response.data    
+                this.isLoading = false;      
 
             }
             catch(e){
@@ -200,7 +231,7 @@ export default {
         async fetchColors(){
             try{
                 const response = await axios.get('http://localhost:3000/Colors')
-                this.optionsColor = response.data 
+                this.optionsColor = response.data
             }
             catch(e){
                 console.log(e)
@@ -224,9 +255,6 @@ export default {
                 console.log(e)
             }
         },
-        showDialog(){
-            this.dialogVisible = true
-        },
         UpdateList(){
             this.fetchEq()
             this.fetchBrands()
@@ -236,19 +264,19 @@ export default {
             this.fetchTransmissions()
             this.fetchDriveTypes()
         },
-        setRangeSlider(){
-            if(this.MinCost > this.MaxCost){
-                let pr1 = this.MaxCost
-                this.MaxCost = this.MinCost
-                this.MinCost = pr1
-            }
-        },
         changePage(Currentpage){
             if(Currentpage <= this.totalpage && Currentpage >= 1)
             {          
                 this.page = Currentpage
             }            
         },
+        setRangeSlider(){
+            if(this.MinCost > this.MaxCost){
+                let pr1 = this.MaxCost
+                this.MaxCost = this.MinCost
+                this.MinCost = pr1
+            }
+        }
     },
     mounted() {
         this.UpdateList()
@@ -267,13 +295,27 @@ export default {
             let selTransmission = this.selectedTransmissions
             let selDriveType = this.selectedDriveTypes
             let eq2 = []
+            let owners = this.Owners
+            if(owners != '')
+            {   
+                if(owners > 2){
+                    equipments = equipments.filter(function (equip){
+                        return equip.Owners >= owners
+                    }) 
+                }
+                else{ 
+                    equipments = equipments.filter(function (equip){
+                        return equip.Owners == owners
+                    })     
+                }      
+            }
             if(selBody.length > 0)
             {
                 eq2 = []
                 equipments = equipments.filter(function (equip){
                     for (let index = 0; index < selBody.length; index++) {
 
-                        if(equip.TechnicalInformation.BodyType.Title == selBody[index]){
+                        if(equip.Equipment.TechnicalInformation.BodyType.Title == selBody[index]){
                             eq2.push(equip)
                         }
                     }
@@ -286,7 +328,7 @@ export default {
                 equipments = equipments.filter(function (equip){
                     for (let index = 0; index < selEngine.length; index++) {
 
-                        if(equip.TechnicalInformation.EngineType.Title == selEngine[index]){
+                        if(equip.Equipment.TechnicalInformation.EngineType.Title == selEngine[index]){
                             eq2.push(equip)
                         }
                     }
@@ -299,7 +341,7 @@ export default {
                 equipments = equipments.filter(function (equip){
                     for (let index = 0; index < selColor.length; index++) {
 
-                        if(equip.TechnicalInformation.Color.Title == selColor[index]){
+                        if(equip.Equipment.TechnicalInformation.Color.Title == selColor[index]){
                             eq2.push(equip)
                         }
                     }
@@ -312,7 +354,7 @@ export default {
                 equipments = equipments.filter(function (equip){
                     for (let index = 0; index < selTransmission.length; index++) {
 
-                        if(equip.TechnicalInformation.Transmission.Title == selTransmission[index]){
+                        if(equip.Equipment.TechnicalInformation.Transmission.Title == selTransmission[index]){
                             eq2.push(equip)
                         }
                     }
@@ -325,7 +367,7 @@ export default {
                 equipments = equipments.filter(function (equip){
                     for (let index = 0; index < selDriveType.length; index++) {
 
-                        if(equip.TechnicalInformation.DriveType.Title == selDriveType[index]){
+                        if(equip.Equipment.TechnicalInformation.DriveType.Title == selDriveType[index]){
                             eq2.push(equip)
                         }
                     }
@@ -340,7 +382,7 @@ export default {
             if(min >= 0)
             {
                 equipments = equipments.filter(function (equip){
-                    return equip.Cost > min && equip.Cost < max
+                    return equip.Equipment.Cost > min && equip.Equipment.Cost < max
                 })           
             }
             else{
@@ -350,13 +392,13 @@ export default {
             {       
                 let modelsOP = [] 
                 equipments = equipments.filter(function (equip){
-                    return equip.Models.Brand.Title == sel1
+                    return equip.Equipment.Models.Brand.Title == sel1
                 })
                 modelsOP = this.eq.filter(function (equip){
-                    return equip.Models.Brand.Title == sel1
+                    return equip.Equipment.Models.Brand.Title == sel1
                 })
                 modelsOP.forEach(equip => {
-                    optionsModels.push(equip.Models)
+                    optionsModels.push(equip.Equipment.Models)
                 });
                 optionsModels = optionsModels.reduce((o, i) => {
                     if (!o.find(v => v.Title == i.Title)) {
@@ -373,7 +415,7 @@ export default {
                 }
                 if (this.selectedModel !== ''){
                     equipments = equipments.filter(function (equip){
-                        return equip.Models.Title == sel2
+                        return equip.Equipment.Models.Title == sel2
                     })
                 }
                 
@@ -388,13 +430,13 @@ export default {
                 if(this.selectedSort  == 'Сначала дешевые')
                 {
                     equipments.sort((a, b) => {
-                        return a.Cost - b.Cost;
+                        return a.Equipment.Cost - b.Equipment.Cost;
                     });
                 }      
                 if(this.selectedSort  == 'Сначала дорогие')
                 {
                     equipments.sort((a, b) => {
-                        return b.Cost - a.Cost;
+                        return b.Equipment.Cost - a.Equipment.Cost;
                     });
                 }  
             }
@@ -403,7 +445,7 @@ export default {
                     return a.id - b.id;
                 });
             }
-            equipments = equipments.filter(equip => equip.Title.toLowerCase().trim().includes(this.searchQuery.toLowerCase()) || equip.Models.Title.toLowerCase().trim().includes(this.searchQuery.toLowerCase()) || equip.Models.Brand.Title.toLowerCase().trim().includes(this.searchQuery.toLowerCase())) 
+            equipments = equipments.filter(equip => equip.Equipment.Title.toLowerCase().trim().includes(this.searchQuery.toLowerCase()) || equip.Equipment.Models.Title.toLowerCase().trim().includes(this.searchQuery.toLowerCase()) || equip.Equipment.Models.Brand.Title.toLowerCase().trim().includes(this.searchQuery.toLowerCase())) 
             this.totalpage = Math.ceil(equipments.length / this.limit)
             if(this.page > this.totalpage)
             {
@@ -412,13 +454,12 @@ export default {
             let startIndex = (this.page - 1) * this.limit
             let endIndex = this.page * this.limit
             return equipments.slice(startIndex, endIndex)
-        }     
-        
+        }
     }
 }
 </script>
 
-<style>
+<style scoped>
     .range-slider{
         margin: 20px 16px;
         text-align: center;
@@ -440,6 +481,7 @@ export default {
 
     .left{
         background-color: whitesmoke;
+        height: 1500px;
     }
 
     .form-check-input{

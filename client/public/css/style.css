@@ -47,9 +47,9 @@ main{
 .left{
     margin-top: 20px;
     margin-bottom: 20px;
-    height: 829px;
+    height: 1305px;
     border-radius: 10px;
-    width: 300px;
+    width: 210px;
 }
 
 .left div{
@@ -130,7 +130,7 @@ footer{
     width: 250px;
     background-color: white;
     display: inline-block !important;
-    height: 420px;
+    height: 430px;
 }
 
 .Car-Item2{
@@ -138,6 +138,7 @@ footer{
     width: 250px;
     display: inline-block !important;
     min-height: 485px;
+    text-align: left;
 }
 
 body a{

@@ -23,6 +23,8 @@ db.engineTypes = require('../model/EngineTypes.model')(sequelize, Sequelize)
 db.models = require('../model/Models.model')(sequelize, Sequelize)
 db.technicalInformation = require('../model/TechnicalInformation.model')(sequelize, Sequelize)
 db.transmissions = require('../model/Transmissions.model')(sequelize, Sequelize)
+db.callrequests = require('../model/CallRequests.model')(sequelize, Sequelize)
+db.buyers = require('../model/Buyers.model')(sequelize, Sequelize)
 
 
 db.technicalInformation.belongsTo(db.engineTypes, {as: 'EngineType', foreignKey: 'EngineTypeID'})
