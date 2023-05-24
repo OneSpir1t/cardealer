@@ -1,7 +1,7 @@
 const { DATEONLY } = require('sequelize');
 const db = require('../config/db.config')
 const CallRequests = db.callrequests;
-const Buyers = db.buyers
+const Users = db.users
 
 exports.findAll = (req, res) => {
     CallRequests.findAll().then(callrequest => {
@@ -17,12 +17,12 @@ exports.createWithUser = async (req, res) => {
     const Equipment = req.params.Equipment
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var mm = String(today.getMonth() + 1).padStart(2, '0');
     var yyyy = today.getFullYear();
     today = mm + '/' + dd + '/' + yyyy;
-    const Buyer = await Buyers.create({FirstName: FirstName, Phone: Phone})
+    const UserBuyer = await Users.create({FirstName: FirstName, Phone: Phone, UserRoleId: 4})
     CallRequests.create({
-        BuyerID: Buyer.id, EquipmentID: Equipment, StatusID: 1, DateRequest: today,
+        BuyerID: UserBuyer.id, EquipmentID: Equipment, StatusID: 1, DateRequest: today,
     }).then(callrequest => {
         res.send(callrequest)
     }).catch(err => {

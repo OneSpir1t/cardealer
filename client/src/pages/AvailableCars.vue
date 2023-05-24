@@ -122,9 +122,9 @@
                 <div v-if="resultEq.length > 0 && totalpage > 1" class="d-flex flex-wrap justify-content-center align-items-center" id="demo">
                     <nav aria-label="Page navigation example">
                         <ul class="pagination">
-                            <li class="page-item"><a class="page-link" @click="changePage(page-1)" href="#">Previous</a></li>
+                            <li class="page-item"><a class="page-link" @click="changePage(page-1)" href="#">Предыдущая</a></li>
                             <li class="page-item" :class="{'active': page === Currentpage}" @click="changePage(Currentpage)" v-for="Currentpage in totalpage" :key="Currentpage"><a class="page-link" href="#">{{ Currentpage }}</a></li>
-                            <li class="page-item"><a class="page-link" @click="changePage(page+1)" href="#">Next</a></li>
+                            <li class="page-item"><a class="page-link" @click="changePage(page+1)" href="#">Следующая</a></li>
                         </ul>
                     </nav>
                 </div> 

@@ -1,5 +1,8 @@
 <template>
     <div class="container-fluid">
+        <div class="spinner-border" role="status" v-if="isLoading">
+            <span class="sr-only"></span>
+        </div>
         <div class="order-div d-flex flex-column justify-content-center align-items-center" v-if="AvailableCar">
             <div class="d-flex flex-column justify-content-center align-items-center">
                 <h1>{{ $route.params.Brand }} {{ $route.params.Model }} {{ $route.params.Name }} {{ AvailableCar.Equipment.TechnicalInformation.Yearofmanufacture }}</h1>
@@ -72,22 +75,25 @@
                     <h2 class="col">{{ AvailableCar.Equipment.Cost.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") }} ₽</h2>
                 </div>
             </div>
-            <div class="m-5 CallRequest ">
-                <h1>Оставить заявку</h1>
-                <form class="d-flex flex-column justify-content-center">
-                    <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Имя</label>
-                        <input type="name" class="form-control" id="exampleInputName" aria-describedby="emailHelp">
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Телефон</label>
-                        <input type="phone" class="form-control" id="exampleInputPhone">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Отправить</button>
-                </form>
+                <div class="m-5 CallRequest">
+                    <div class="d-flex flex-column justify-content-center" v-if="!isCallReq">
+                        <h1>Оставить заявку</h1>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Имя</label>
+                            <input type="name" v-model.trim="Name" @input="InputName" maxlength="20" class="form-control" id="exampleInputName" aria-describedby="emailHelp"/>
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputPassword1" class="form-label">Телефон</label>
+                            <input type="tel" v-on:keydown.delete="InputDeleteKeyDown" @input="InputPhone" maxlength="18" v-model.trim="phone" autocomplete="tel" class="form-control" id="exampleInputPhone"/>
+                        </div>
+                        <button v-on:click="SendCallReq" class="btn btn-primary">Отправить</button>
+                    </div>    
+                    <div class="m-5" v-else>
+                    <h1>Заявка оформлена, ожидайте звонка</h1>
 
 
             </div>
+        </div>
         </div>
         <div class="container-fluid h-100 d-flex justify-content-center align-items-center" v-else>Ничего не найдено</div>
     </div>
@@ -98,13 +104,94 @@ export default {
     data() {
         return{
             Id: 0,
-            AvailableCar: ''
+            AvailableCar: '',
+            isLoading: false,
+            PassPhone: false,
+            Name: '',
+            phone: '',
+            isCallReq: false,
         }
     },  
     methods: {
         async fetchAcOne(){
+            this.isLoading = true;
             const response = await axios.get('http://localhost:3000/availablecars/' + this.Id)
             this.AvailableCar = response.data[0]
+            this.isLoading = false;
+        },
+        InputPhone(){
+            let numbers = this.phone.replace(/\D/g,'')
+            let formattedNum = ''; 
+            if (!numbers){
+                return this.phone = ""
+            }
+            if(['7', '8', '9'].indexOf(numbers[0]) > -1){
+                if(numbers[0] == '9'){
+                    numbers = '7' + numbers
+                }
+                let fristSymbols = (numbers[0] === '8') ? '8' : '+7';
+                formattedNum = fristSymbols + ' '
+                if(numbers.length > 1){
+                    formattedNum += "(" + numbers.substring(1,4);
+                }
+                if(numbers.length >= 5)
+                {
+                    formattedNum += ') ' + numbers.substring(4,7)
+                }
+                if(numbers.length >= 8)
+                {
+                    formattedNum += '-' + numbers.substring(7,9)
+                }
+                if(numbers.length >= 10)
+                {
+                    formattedNum += '-' + numbers.substring(9,11)
+                }
+            } else {
+                formattedNum = '+' + numbers.substring(0,16)
+            }
+            if(numbers[0] == '7' && numbers.length == 11 || numbers[0] == '8' && numbers.length <= 12 || numbers[0] != '7' && numbers[0] != '8' && numbers.length > 11){
+                this.PassPhone = true
+            } else{
+                this.PassPhone = false
+            }
+            this.phone = formattedNum        
+        },
+        InputDeleteKeyDown(){
+            if(this.phone == 8 || this.phone == +7){
+                this.phone = ''
+            }
+        },
+        async SendCallReq(){
+            if(this.PassPhone && this.Name.length > 2)
+            {
+                try{
+                    this.phone = this.phone.replace(/\D/g,'')
+                    const response = await axios.post('http://localhost:3000/CallRequests/' + this.Name + '/' + this.phone + '/' + this.Equipment.id)
+                    if(response){
+                        this.isCallReq = true
+                        this.phone = ''
+                        this.Name = ''
+                    }
+                    else{
+                        alert('Сервер недоступен, ожидайте')
+                    }
+                }
+                catch(e){
+                    console.log(e)
+                }
+            }
+            else{
+                console.log(this.Name)
+                alert('Заполните форму')
+            }
+        },
+        InputName(){
+            let str = this.Name.trim().toLowerCase().replace(/[^A-zА-я\s]/g,'')
+            if(!str) return this.Name = ''
+            if (str.toLowerCase()[0] == str[0]){
+                str = str[0].toUpperCase() + str.substring(1,19)
+            }
+            this.Name = str
         }
     },
     mounted(){

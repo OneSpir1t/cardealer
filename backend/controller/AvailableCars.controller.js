@@ -20,7 +20,8 @@ exports.findOne = (req, res) => {
     const Id = req.params.Id
     AvailableCars.findAll({
         where:{
-            Id: Id
+            Id: Id,
+            CanOrder: 1
         },
         include: [
             {association: 'Equipment', include: [

@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const Buyers = sequelize.define('buyers', {
+    const Users = sequelize.define('users', {
         id: {
             type: Sequelize.DataTypes.INTEGER,
             allowNull: false,
@@ -32,11 +32,19 @@ module.exports = (sequelize, Sequelize) => {
         },
         Phone:{
             type: Sequelize.DataTypes.STRING,
+            allowNull: true
+        },
+        Login:{
+            type: Sequelize.DataTypes.STRING,
+            allowNull: true
+        },
+        UserRoleId:{
+            type: Sequelize.DataTypes.INTEGER,
             allowNull: false
         },
     }, {
         timestamps: false,
         freezeTableName: true
     })
-    return Buyers
+    return Users
 }
