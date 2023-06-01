@@ -166,7 +166,7 @@ export default {
             {
                 try{
                     this.phone = this.phone.replace(/\D/g,'')
-                    const response = await axios.post('http://localhost:3000/CallRequests/' + this.Name + '/' + this.phone + '/' + this.Equipment.id)
+                    const response = await axios.post('http://localhost:3000/CallRequests/' + this.Name + '/' + this.phone + '/' + this.AvailableCar.Equipment.id + '/' + this.AvailableCar.id)
                     if(response){
                         this.isCallReq = true
                         this.phone = ''

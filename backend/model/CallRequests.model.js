@@ -14,6 +14,10 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.DataTypes.INTEGER,
             allowNull: false
         },
+        AvailableCarID:{
+            type: Sequelize.DataTypes.INTEGER,
+            allowNull: true
+        },
         StatusID:{
             type: Sequelize.DataTypes.INTEGER,
             allowNull: false

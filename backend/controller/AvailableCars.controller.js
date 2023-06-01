@@ -3,6 +3,9 @@ const AvailableCars = db.availableCars;
 
 exports.findAll = (req, res) => {
     AvailableCars.findAll({
+        where:{
+            CanOrder: 1
+        },
         include: [
             {association: 'Equipment', include: [
                 {association: 'Models', include: [{association: "Brand"}]},

@@ -15,6 +15,7 @@ exports.createWithUser = async (req, res) => {
     const FirstName = req.params.Name
     const Phone = req.params.Phone
     const Equipment = req.params.Equipment
+    const AvailableCar = req.params.AvailableCar || null
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -22,7 +23,7 @@ exports.createWithUser = async (req, res) => {
     today = mm + '/' + dd + '/' + yyyy;
     const UserBuyer = await Users.create({FirstName: FirstName, Phone: Phone, UserRoleId: 4})
     CallRequests.create({
-        BuyerID: UserBuyer.id, EquipmentID: Equipment, StatusID: 1, DateRequest: today,
+        BuyerID: UserBuyer.id, EquipmentID: Equipment, StatusID: 1, DateRequest: today, AvailableCarID: AvailableCar
     }).then(callrequest => {
         res.send(callrequest)
     }).catch(err => {

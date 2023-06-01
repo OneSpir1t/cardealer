@@ -4,6 +4,6 @@ const CallRequests = require('../controller/CallRequests.controller')
 
 route.get('/', CallRequests.findAll)
 
-route.post('/:Name/:Phone/:Equipment', CallRequests.createWithUser)
+route.post('/:Name/:Phone/:Equipment/:AvailableCar', CallRequests.createWithUser)
 
 module.exports = route
