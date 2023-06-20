@@ -20,6 +20,7 @@ exports.createWithUser = async (req, res) => {
     var mm = String(today.getMonth() + 1).padStart(2, '0');
     var yyyy = today.getFullYear();
     today = mm + '-' + dd + '-' + yyyy;
+    let findUser = ""
     const UserBuyer = await Users.create({FirstName: FirstName, Phone: Phone, UserRoleId: 4})
     CallRequests.create({
         BuyerID: UserBuyer.id, EquipmentID: Equipment, StatusID: 1, DateRequest: today, AvailableCarID: AvailableCar
