@@ -2,18 +2,17 @@
     <header id="header">
       <ul class="nav nav-underline">
         <li class="nav-item selected">
-          <a aria-current="page" href="/">
+          <router-link aria-current="page" exact to="/">
             <img src="../public/img/logo.png">
-          </a>
+          </router-link>
         </li>
-        <div class="d-flex align-items-center">
-            
-            <li class="nav-item p-2">
-              <a class="nav-link" :class="{'active': currentPath === '/catalogue'}" href="/catalogue">Каталог</a>
-            </li>
-            <li class="nav-item p-2">
-              <a class="nav-link" :class="{'active': currentPath === '/availablecars'}" href="/availablecars">Автомобили в наличии</a>
-            </li>
+        <div class="d-flex align-items-center">           
+          <li class="nav-item p-2">
+            <router-link exact to="/catalogue" class="nav-link" exact-active-class="active">Каталог</router-link>
+          </li>
+          <li class="nav-item p-2">
+            <router-link exact to="/availablecars" class="nav-link" exact-active-class="active">Автомобили в наличии</router-link>
+          </li>
         </div>
       </ul>
     </header>
@@ -27,16 +26,19 @@
 </template>
 
 <script>
-    export default{
-        data(){
-            return{
-              currentPath: ''
-            }
-        },
-        mounted(){
-            this.currentPath = window.location.pathname
-        }
-    }
+  export default{
+    data(){
+      return{
+        currentPath: ''
+      }
+    },
+    computed: {
+      Path(){
+        console.log(window.location.pathname)
+        return window.location.pathname
+      }
+    },
+  }
 
 </script>
 

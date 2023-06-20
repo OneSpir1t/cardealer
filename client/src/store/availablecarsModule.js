@@ -1,7 +1,8 @@
 import axios from "axios"
-export const catalogueModule = { 
+export const availablecarsModule = { 
     state: () => ({
-        eq: [],           
+        eq: [],
+        dialogVisible: false,
         selectedSort: '',
         selectedBrand: '',
         selectedModel: '',
@@ -18,6 +19,7 @@ export const catalogueModule = {
         optionsEngineType:[],
         optionsTransmission:[],
         optionsDriveType: [],
+        Owners: '',
         MaxCost: 55000000,
         MinCost: 500000,
         page: 1,
@@ -33,6 +35,9 @@ export const catalogueModule = {
     mutations: {
         seteq(state, eq){
             state.eq = eq
+        },
+        setOwners(state, Owners){
+            state.Owners = Owners
         },
         setisLoading(state, bool){
             state.isLoading = bool
@@ -97,81 +102,6 @@ export const catalogueModule = {
         setMinCost(state, MinCost){
             state.MinCost = MinCost
         },
-    },
-    actions: {
-        async fetchEq({state, commit}){
-            try{
-                commit('setisLoading', true)
-                const response = await axios.get("http://localhost:3000/Equipments")
-                commit('seteq', response.data ) 
-                commit('setisLoading', false);
-            }
-            catch(e){
-                console.log(e)
-            } finally { 
-
-            }
-        },
-        async fetchBrands({state, commit}){
-            try{
-                commit('setisLoading', true);
-                const response = await axios.get('http://localhost:3000/Brands')
-                commit('setoptionsBrand', response.data)    
-                commit('setisLoading', false)     
-
-            }
-            catch(e){
-                console.log(e)
-            }
-        },
-        async fetchBodyTypes({state,commit}){
-            try{
-                const response = await axios.get('http://localhost:3000/BodyTypes')
-                commit('setoptionsBodyType', response.data)
-            }
-            catch(e){
-                console.log(e)
-            }
-        },
-        async fetchEngineTypes({state, commit}){
-            try{
-                const response = await axios.get('http://localhost:3000/EngineTypes')
-                commit('setoptionsEngineType', response.data)
-            }
-            catch(e){
-                console.log(e)
-            }
-        },
-        async fetchColors({state, commit}){
-            try{
-                const response = await axios.get('http://localhost:3000/Colors')
-                commit('setoptionsColor', response.data)
-            }
-            catch(e){
-                console.log(e)
-            }
-        },
-        async fetchTransmissions({state, commit}){
-            try{
-                const response = await axios.get('http://localhost:3000/Transmissions')
-                commit('setoptionsTransmission', response.data)
-            }
-            catch(e){
-                console.log(e)
-            }
-        },
-        async fetchDriveTypes({state, commit}){
-            try{
-                const response = await axios.get('http://localhost:3000/DriveTypes')
-                commit('setoptionsDriveType', response.data)
-            }
-            catch(e){
-                console.log(e)
-            }
-        },
-    },
-    computed: {
-       
     },
     namespaced: true
 }

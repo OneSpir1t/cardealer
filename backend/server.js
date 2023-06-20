@@ -16,7 +16,7 @@ const Transmissions = require('./route/Transmissions.route')
 const DriveTypes = require('./route/DriveTypes.route')
 const AvailableCars = require('./route/AvailableCars.route')
 const CallRequests = require('./route/CallRequests.route')
-
+const Models = require('./route/Models.route')
 
 app.use('/Equipments', Equipments)
 
@@ -35,5 +35,7 @@ app.use('/DriveTypes', DriveTypes)
 app.use('/AvailableCars', AvailableCars)
 
 app.use('/CallRequests', CallRequests)
+
+app.use('/Models', Models)
 
 app.listen(3000, () => console.log('server running at: http://localhost:3000'));

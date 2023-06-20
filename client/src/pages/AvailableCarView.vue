@@ -75,25 +75,23 @@
                     <h2 class="col">{{ AvailableCar.Equipment.Cost.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") }} ₽</h2>
                 </div>
             </div>
-                <div class="m-5 CallRequest">
-                    <div class="d-flex flex-column justify-content-center" v-if="!isCallReq">
-                        <h1>Оставить заявку</h1>
-                        <div class="mb-3">
-                            <label for="exampleInputEmail1" class="form-label">Имя</label>
-                            <input type="name" v-model.trim="Name" @input="InputName" maxlength="20" class="form-control" id="exampleInputName" aria-describedby="emailHelp"/>
-                        </div>
-                        <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">Телефон</label>
-                            <input type="tel" v-on:keydown.delete="InputDeleteKeyDown" @input="InputPhone" maxlength="18" v-model.trim="phone" autocomplete="tel" class="form-control" id="exampleInputPhone"/>
-                        </div>
-                        <button v-on:click="SendCallReq" class="btn btn-primary">Отправить</button>
-                    </div>    
-                    <div class="m-5" v-else>
+            <div class="m-5 CallRequest">
+                <div class="d-flex flex-column justify-content-center" v-if="!isCallReq">
+                    <h1>Оставить заявку</h1>
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Имя</label>
+                        <input type="name" v-model.trim="Name" @input="InputName" maxlength="20" class="form-control" id="exampleInputName" aria-describedby="emailHelp"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">Телефон</label>
+                        <input type="tel" v-on:keydown.delete="InputDeleteKeyDown" @input="InputPhone" maxlength="18" v-model.trim="phone" autocomplete="tel" class="form-control" id="exampleInputPhone"/>
+                    </div>
+                    <button v-on:click="SendCallReq" class="btn btn-primary">Отправить</button>
+                </div>    
+                <div class="m-5" v-else>
                     <h1>Заявка оформлена, ожидайте звонка</h1>
-
-
-            </div>
-        </div>
+                </div>
+            </div>           
         </div>
         <div class="container-fluid h-100 d-flex justify-content-center align-items-center" v-else>Ничего не найдено</div>
     </div>

@@ -1,4 +1,3 @@
-const { DATEONLY } = require('sequelize');
 const db = require('../config/db.config')
 const CallRequests = db.callrequests;
 const Users = db.users
@@ -20,7 +19,7 @@ exports.createWithUser = async (req, res) => {
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0');
     var yyyy = today.getFullYear();
-    today = mm + '/' + dd + '/' + yyyy;
+    today = mm + '-' + dd + '-' + yyyy;
     const UserBuyer = await Users.create({FirstName: FirstName, Phone: Phone, UserRoleId: 4})
     CallRequests.create({
         BuyerID: UserBuyer.id, EquipmentID: Equipment, StatusID: 1, DateRequest: today, AvailableCarID: AvailableCar

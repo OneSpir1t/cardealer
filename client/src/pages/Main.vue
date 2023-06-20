@@ -1,5 +1,9 @@
 <template>
-  <div>
+  <div class="d-flex flex-column container-fluid align-items-center justify-content-center">
+    <div class="ToConfig d-flex justify-content-center align-items-center p-2">
+      <router-link to="/configurator"><button class="btn btn-info">Конфигуратор</button></router-link>
+      <h5 class="text-center">Воспользуйтесь кофигуратором и закажите свой автомобиль, необходимой комплектации </h5>
+    </div>
     <div class="container my-carousel">
       <div id="carouselExampleAutoplaying" class="carousel slide carousel-fade" data-bs-ride="carousel">
         <div class="carousel-indicators">

@@ -82,6 +82,7 @@ footer{
 
 .my-carousel{
     margin-top: 20px;
+    margin-bottom: 20px;
     padding: 0;
     display: flex;
     justify-content: center;
@@ -217,6 +218,43 @@ body a{
 }
 #Car-color8{
     background-color: gray;
+}
+
+.ToConfig{
+    margin-top: 20px;
+    background-color: rgb(240,255,255);
+    border: solid 0.5px black;
+    border-radius: 10px;
+}
+
+.ToConfig button{
+    margin-right: 10px;
+    width: 150px;
+}
+
+.ChooseBrand{
+    width: 700px;
+}
+
+.ChooseModel{
+    width: 500px;
+}
+
+.ChooseСomplectation{
+    width: 500px;
+}
+
+.Brand-Item{
+    background-color: whitesmoke;
+    width: 150px;
+    height: 100px;
+}
+
+.Previev-Config{
+    position: absolute;
+    bottom: 30%;
+    right: 10%;
+    background-color: grey;
 }
 /* CarView */
 

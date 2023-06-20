@@ -3,6 +3,7 @@ import Catalogue from "@/pages/Catalogue"
 import CatalogueCar from "@/pages/CatalogueCarView"
 import AvailableCars from "@/pages/AvailableCars"
 import AvailableCarView from "@/pages/AvailableCarView"
+import Configurator from "@/pages/Configurator"
 import {createRouter, createWebHistory} from 'vue-router'
 
 const routes = [
@@ -25,8 +26,11 @@ const routes = [
     },
     {
         path: '/availablecars/:Brand/:Model/:Name/:Id',
-        component: AvailableCarView
-        
+        component: AvailableCarView       
+    },
+    {
+        path: '/configurator',
+        component: Configurator
     }
 ]
 

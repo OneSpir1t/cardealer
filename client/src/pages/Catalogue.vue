@@ -1,17 +1,19 @@
 <template>
     <div class="container-fluid" @click="hideDialog">
-        <div class="d-flex">
+        <div class="d-flex justify-content-center align-items">
             <div class="p-2 left d-flex flex-column justify-content-start" v-if="!isLoading"> 
                 <div class="form-group">
                     <label class="m-2">Поиск:</label>
                     <MyInput
-                        v-model.trim="searchQuery"
+                        :model-value="searchQuery"    
+                        @Update:model-value="setsearchQuery"   
                     />
                 </div>
                 <div class="form-group">
                     <label>Марка:</label>
                     <MySelect
-                        v-model="selectedBrand"
+                        :model-value="selectedBrand"
+                        @update:model-value="setselectedBrand"
                         :options="optionsBrand"
                     />  
                 </div>
@@ -19,7 +21,8 @@
                     <label>Модель:</label>
                     <MySelect  
                         v-if="optionsModel.length > 0"              
-                        v-model="selectedModel"
+                        :model-value="selectedModel"
+                        @update:model-value="setselectedModel"
                         :options="optionsModel"                            
                     /> 
                     <MySelect  
@@ -30,15 +33,16 @@
                 <div class="form-group">
                     <label>Сортировка:</label>          
                     <MySelect
-                        v-model="selectedSort"
+                        :model-value="selectedSort"
+                        @update:model-value="setselectedSort"
                         :options="optionsSort"
                     />
                 </div>
                 <div class="d-flex flex-column justify-content-between align-item-center">
                     <label>Цена:</label>                  
                     <div class="range-slider">
-                        <input type="range" min="500000" @change="setRangeSlider" max="55000000" step="100000" v-model.number="MinCost">
-                        <input type="range" min="500000" @change="setRangeSlider" max="55000000" step="100000" v-model.number="MaxCost">
+                        <MyInput type="range" min="500000" @change="setRangeSlider" max="55000000" @update:model-value="setMinCost" step="100000" :model-value.number="MinCost"/>
+                        <MyInput type="range" min="500000" @change="setRangeSlider" max="55000000" @update:model-value="setMaxCost" step="100000" :model-value.number="MaxCost"/>
                     </div>
                 </div>
                 <div class="range-values d-flex flex-row justify-content-between align-item-center">
@@ -48,7 +52,7 @@
                 <div class="checkboxBodyTypes">
                     <h4>Тип кузова:</h4>
                     <div v-for="BodyType in optionsBodyType" class="form-check">
-                        <input class="form-check-input" :value="BodyType.Title" v-model="selectedBodyTypes" type="checkbox" :id="BodyType.Title+BodyType.id"/>
+                        <MyCheckBox class="form-check-input" :value="BodyType.Title" :model-value="selectedBodyTypes" @update:model-value="setselectedBodyTypes" :id="BodyType.Title+BodyType.id"/>
                         <label class="form-check-label" :for="BodyType.Title+BodyType.id">
                             {{ BodyType.Title }}
                         </label>
@@ -57,7 +61,7 @@
                 <div class="checkboxEngineTypes">
                     <h4>Тип двигателя:</h4>
                     <div v-for="EngineType in optionsEngineType" class="form-check">
-                        <input class="form-check-input" :value="EngineType.Title" v-model="selectedEngineTypes" type="checkbox" :id="EngineType.id"/>
+                        <MyCheckBox class="form-check-input" :value="EngineType.Title" :model-value="selectedEngineTypes" @update:model-value="setselectedEngineTypes" type="checkbox" :id="EngineType.id"/>
                         <label class="form-check-label" :for="EngineType.id">
                             {{ EngineType.Title }}
                         </label>
@@ -66,7 +70,7 @@
                 <div class="checkboxColors ">
                     <h4>Цвет:</h4>
                     <div v-for="Color in optionsColor" class="form-check">
-                        <input class="form-check-input" :value="Color.Title" v-model="selectedColors" type="checkbox" :id="Color.Title+Color.id"/>
+                        <MyCheckBox class="form-check-input" :value="Color.Title" :model-value="selectedColors" @update:model-value="setselectedColors" type="checkbox" :id="Color.Title+Color.id"/>
                         <label class="form-check-label" :for="Color.Title+Color.id">
                             {{ Color.Title }}
                         </label>
@@ -75,7 +79,7 @@
                 <div class="checkboxTransmissions">
                     <h4>Коробка:</h4>
                     <div v-for="Transmission in optionsTransmission" class="form-check">
-                        <input class="form-check-input" :value="Transmission.Title" v-model="selectedTransmissions" type="checkbox" :id="Transmission.Title+Transmission.id"/>
+                        <MyCheckBox class="form-check-input" :value="Transmission.Title" :model-value="selectedTransmissions" @update:model-value="setselectedTransmissions" type="checkbox" :id="Transmission.Title+Transmission.id"/>
                         <label class="form-check-label" :for="Transmission.Title+Transmission.id">
                             {{ Transmission.Title }}
                         </label>
@@ -84,7 +88,7 @@
                 <div class="checkboxDriveTypes">
                     <h4>Привод:</h4>
                     <div v-for="DriveType in optionsDriveType" class="form-check">
-                        <input class="form-check-input" :value="DriveType.Title" v-model="selectedDriveTypes" type="checkbox" :id="DriveType.Title+DriveType.id"/>
+                        <MyCheckBox class="form-check-input" :value="DriveType.Title" :model-value="selectedDriveTypes" @update:model-value="setselectedDriveTypes" type="checkbox" :id="DriveType.Title+DriveType.id"/>
                         <label class="form-check-label" :for="DriveType.Title+DriveType.id">
                             {{ DriveType.Title }}
                         </label>
@@ -98,12 +102,12 @@
                 <div class="spinner-border" role="status" v-if="isLoading">
                     <span class="sr-only"></span>
                 </div>
-                <div v-if="resultEq.length > 0 && totalpage > 1" class="d-flex flex-wrap justify-content-center align-items-center" id="demo">
+                <div v-if="resultEq.length > 0 && totalpage > 1 && !isLoading" class="d-flex flex-wrap justify-content-center align-items-center m-5" id="demo">
                     <nav aria-label="Page navigation example">
                         <ul class="pagination">
-                            <li class="page-item"><a class="page-link" @click="changePage(page-1)" href="#">Предыдущая</a></li>
-                            <li class="page-item" :class="{'active': page === Currentpage}" @click="changePage(Currentpage)" v-for="Currentpage in totalpage" :key="Currentpage"><a class="page-link" href="#">{{ Currentpage }}</a></li>
-                            <li class="page-item"><a class="page-link" @click="changePage(page+1)" href="#">Следующая</a></li>
+                            <li class="page-item"><router-link to="#"  class="page-link" @click="changePage(page-1)">Предыдущая</router-link ></li>
+                            <li class="page-item" :class="{'active': page === Currentpage}" @click="changePage(Currentpage)" v-for="Currentpage in totalpage" :key="Currentpage"><router-link to="#"  class="page-link" >{{ Currentpage }}</router-link ></li>
+                            <li class="page-item"><router-link to="#"  class="page-link" @click="changePage(page+1)">Следующая</router-link ></li>
                         </ul>
                     </nav>
                 </div> 
@@ -119,122 +123,122 @@ import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 export default {
     name: 'Catalogue',
     components: {
-    EquipmentList,
-},
+        EquipmentList
+    },  
     data(){
-        return {
-            eq: [],           
+        return {      
             isLoading: false,
-            selectedSort: '',
-            selectedBrand: '',
-            selectedModel: '',
-            searchQuery: '',
-            selectedBodyTypes: [],
-            selectedEngineTypes: [],
-            selectedColors: [],
-            selectedTransmissions: [],
-            selectedDriveTypes: [],
-            optionsBrand: [],
-            optionsModel: [],
-            optionsBodyType: [],
-            optionsColor: [],
-            optionsEngineType:[],
-            optionsTransmission:[],
-            optionsDriveType: [],
-            MaxCost: 55000000,
-            MinCost: 500000,
-            page: 1,
-            totalpage: 0,
-            limit: 9,
-            optionsSort: [
-                {value: 'Cost', Title: 'Сначала дешевые'},
-                {value: 'Costdesc', Title: 'Сначала дорогие'}
-            ]
         }
         
     },  
     methods:{
+        ...mapMutations({
+            setsearchQuery: 'catalogue/setsearchQuery',
+            seteq: 'catalogue/seteq',
+            setoptionsBrand: 'catalogue/setoptionsBrand',  
+            setoptionsModel: 'catalogue/setoptionsModel',
+            setoptionsBodyType: "catalogue/setoptionsBodyType",
+            setoptionsEngineType: 'catalogue/setoptionsEngineType',
+            setoptionsColor: 'catalogue/setoptionsColor',
+            setoptionsTransmission: 'catalogue/setoptionsTransmission',
+            setoptionsDriveType: 'catalogue/setoptionsDriveType',
+            setselectedBrand: 'catalogue/setselectedBrand',
+            setselectedModel: 'catalogue/setselectedModel',
+            setselectedBodyTypes: 'catalogue/setselectedBodyTypes',
+            setselectedEngineTypes: 'catalogue/setselectedEngineTypes',
+            setselectedColors: 'catalogue/selectedColors',
+            setselectedTransmissions: 'catalogue/setselectedTransmissions',
+            setselectedDriveTypes: 'catalogue/setselectedDriveTypes',
+            setselectedSort: 'catalogue/setselectedSort',
+            setpage: 'catalogue/setpage',
+            settotalpage: 'catalogue/settotalpage',
+            setMaxCost: 'catalogue/setMaxCost',
+            setMinCost: 'catalogue/setMinCost',
+            
+        }),
         async fetchEq(){
             try{
                 this.isLoading = true
-                const response = await axios.get("http://localhost:3000/Equipments")
-                this.eq = response.data
+                const response = await axios.get("http://localhost:3000/Equipments")               
+                this.seteq(response.data)
                 this.isLoading = false
             }
             catch(e){
-                console.log(e)
-            } finally { 
-
+                //console.log(e)
             }
         },
         async fetchBrands(){
             try{
                 this.isLoading = true
                 const response = await axios.get('http://localhost:3000/Brands')
-                this.optionsBrand = response.data
+                this.setoptionsBrand(response.data)
                 this.isLoading = false   
 
             }
             catch(e){
-                console.log(e)
+                //console.log(e)
             }
         },
         async fetchBodyTypes(){
             try{
                 const response = await axios.get('http://localhost:3000/BodyTypes')
-                this.optionsBodyType = response.data
+                this.setoptionsBodyType(response.data)
             }
             catch(e){
-                console.log(e)
+                //console.log(e)
             }
         },
         async fetchEngineTypes(){
             try{
                 const response = await axios.get('http://localhost:3000/EngineTypes')
-                this.optionsEngineType = response.data
+                this.setoptionsEngineType(response.data)
             }
             catch(e){
-                console.log(e)
+                //console.log(e)
             }
         },
         async fetchColors(){
             try{
                 const response = await axios.get('http://localhost:3000/Colors')
-                this.optionsColor = response.data 
+                this.setoptionsColor(response.data) 
             }
             catch(e){
-                console.log(e)
+                //console.log(e)
             }
         },
         async fetchTransmissions(){
             try{
                 const response = await axios.get('http://localhost:3000/Transmissions')
-                this.optionsTransmission = response.data
+                this.setoptionsTransmission(response.data)
             }
             catch(e){
-                console.log(e)
+                //console.log(e)
             }
         },
         async fetchDriveTypes(){
             try{
                 const response = await axios.get('http://localhost:3000/DriveTypes')
-                this.optionsDriveType = response.data
+                this.setoptionsDriveType(response.data)
             }
             catch(e){
-                console.log(e)
+                //console.log(e)
             }
         },
         showDialog(){
             this.dialogVisible = true
         },
         UpdateList(){
-            this.fetchEq()
-            this.fetchBrands()
-            this.fetchBodyTypes()
-            this.fetchEngineTypes()
-            this.fetchColors()
-            this.fetchTransmissions()
-            this.fetchDriveTypes()
+            try{
+                this.fetchEq()
+                this.fetchBrands()
+                this.fetchBodyTypes()
+                this.fetchEngineTypes()
+                this.fetchColors()
+                this.fetchTransmissions()
+                this.fetchDriveTypes()
+            }
+            catch{
+            }
         },
         setRangeSlider(){
             if(this.MinCost > this.MaxCost){
@@ -246,14 +250,62 @@ export default {
         changePage(Currentpage){
             if(Currentpage <= this.totalpage && Currentpage >= 1)
             {          
-                this.page = Currentpage
+                this.setpage(Currentpage)
             }            
         },
     },
     mounted() {
         this.UpdateList()
     }, 
+    watch:{
+        isLoading(){
+            if (this.isLoading){     
+                setInterval(() => {     
+                    setTimeout(() =>{          
+                        if(this.isLoading){
+                            setTimeout(() => {
+                                try{              
+                                    this.UpdateList()
+                                }
+                                catch(e){
+                                    
+                                }
+                                finally{               
+                                }
+                            }, 5000);     
+                        }             
+                    }, 5000)
+                }, 10000)  
+                
+            }
+        }
+    },
     computed: {
+        ...mapState({
+            eq: state => state.catalogue.eq,           
+            selectedSort: state => state.catalogue.selectedSort,
+            selectedBrand: state => state.catalogue.selectedBrand,
+            selectedModel: state => state.catalogue.selectedModel,
+            searchQuery: state => state.catalogue.searchQuery,
+            selectedBodyTypes: state => state.catalogue.selectedBodyTypes,
+            selectedEngineTypes: state => state.catalogue.selectedEngineTypes,
+            selectedColors: state => state.catalogue.selectedColors,
+            selectedTransmissions: state => state.catalogue.selectedTransmissions,
+            selectedDriveTypes: state => state.catalogue.selectedDriveTypes,
+            optionsBrand: state => state.catalogue.optionsBrand,
+            optionsModel: state => state.catalogue.optionsModel,
+            optionsBodyType: state => state.catalogue.optionsBodyType,
+            optionsColor: state => state.catalogue.optionsColor,
+            optionsEngineType: state => state.catalogue.optionsEngineType,
+            optionsTransmission: state => state.catalogue.optionsTransmission,
+            optionsDriveType: state => state.catalogue.optionsDriveType,
+            MaxCost: state => state.catalogue.MaxCost,
+            MinCost: state => state.catalogue.MinCost,
+            page: state => state.catalogue.page,
+            totalpage: state => state.catalogue.totalpage,
+            limit: state => state.catalogue.limit,
+            optionsSort: state => state.catalogue.optionsSort,
+        }),
         resultEq(){
             let equipments = this.eq       
             let sel1 = this.selectedBrand  
@@ -367,8 +419,8 @@ export default {
                 if(this.optionsModel[0] !== optionsModels[0])
                 {
                     this.changePage(1)
-                    this.optionsModel = optionsModels 
-                    this.selectedModel = ''
+                    this.setoptionsModel(optionsModels)
+                    this.setselectedModel('')
                     sel2 = ''
                 }
                 if (this.selectedModel !== ''){
@@ -377,11 +429,11 @@ export default {
                     })
                 }
                 
-            }
+            }           
             if(this.selectedBrand == '')
             {
-                this.selectedModel = ''
-                this.optionsModel = ''
+                this.setselectedModel('');
+                this.setoptionsModel('');
             }
             if(this.selectedSort != '')
             {
@@ -404,7 +456,7 @@ export default {
                 });
             }
             equipments = equipments.filter(equip => equip.Title.toLowerCase().trim().includes(this.searchQuery.toLowerCase()) || equip.Models.Title.toLowerCase().trim().includes(this.searchQuery.toLowerCase()) || equip.Models.Brand.Title.toLowerCase().trim().includes(this.searchQuery.toLowerCase())) 
-            this.totalpage = Math.ceil(equipments.length / this.limit)
+            this.settotalpage(Math.ceil(equipments.length / this.limit))
             if(this.page > this.totalpage)
             {
                 this.changePage(1)
@@ -412,8 +464,7 @@ export default {
             let startIndex = (this.page - 1) * this.limit
             let endIndex = this.page * this.limit
             return equipments.slice(startIndex, endIndex)
-        }     
-        
+        },
     }
 }
 </script>

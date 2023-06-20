@@ -4,9 +4,9 @@
             <div class='m-2'>
                 <a href="#" @click="$router.push('/catalogue/' + item.Models.Brand.Title + '/' + item.Models.Title + '/' + item.Title + '/' + item.id)" class="Car-link">
                     <div class="Car-Item">
-                        <div class="Car-Image" v>
+                        <div class="Car-Image"  >
                             <img v-if="item.Image" class="img-fluid img-car" :src="require('@/assets/'+item.Image)">       
-                            <img v-else class="img-fluid img-car" src="../assets/defaultImage.jpg">                     
+                            <img v-else class="img-fluid img-car" src="../assets/defaultImage.jpg">                   
                         </div>
                         <div class="Car-Info-Item d-flex flex-column align-items-start">
                             <div class="Car-Model-Info">
